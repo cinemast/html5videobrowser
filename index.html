@@ -14,6 +14,7 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="css/navbar-static-top.css" rel="stylesheet">
+    <link href="css/videobrowser.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -59,13 +60,21 @@
 
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Video Player</h1>
-        <video width="320" height="180" controls poster="media/poster.jpg">
-        <source src="media/BigBuckBunny_320x180.webm" type="video/webm">
-	       Your browser does not support the video tag.
-	    </video> 
-      </div>
 
+      </div>
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+          <video id="videoplayer" width="100%" controls poster="media/poster.jpg">
+                <source src="media/BigBuckBunny_320x180.webm" type="video/webm">
+           Your browser does not support the video tag.
+        </video>
+      </div>
+      <div class="col-md-4">
+
+      </div>
+      <div class="col-md-12" id="timeline_container">
+            <canvas id="timeline" height="25px"></canvas>
+      </div>
     </div> <!-- /container -->
 
 
@@ -74,6 +83,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-1.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="js/videobrowser.js"></script>
 
 
 </body></html>
