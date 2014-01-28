@@ -28,8 +28,8 @@ $(document).ready(function () {
     ctx_timeline = timeline[0].getContext("2d");
     ctx_timeline.canvas.width = container_timline.width();
     ctx_timeline.canvas.height = 200;
-
-    drawTimeline(3600*2, 20);
+	var vid_duration = Math.round(document.getElementById("videoplayer").duration);
+    drawTimeline(vid_duration, 20);
 });
 
 //length in seconds, interval in divions units
