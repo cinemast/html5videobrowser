@@ -1,0 +1,2 @@
+http://jsfiddle.net/vphyr/             //Extract Thumbnails, Client SIde
+http://msujaws.wordpress.com/2012/09/04/seek-previews-for-html5-video/
