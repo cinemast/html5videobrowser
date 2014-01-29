@@ -64,7 +64,7 @@
       </div>
       <div class="col-md-4"></div>
       <div class="col-md-4">
-          <video id="videoplayer" width="100%" controls poster="media/poster.jpg">
+          <video id="videoplayer" width="100%" controls preload poster="media/poster.jpg">
                 <source src="media/BigBuckBunny_320x180.webm" type="video/webm">
            Your browser does not support the video tag.
         </video>
@@ -73,7 +73,24 @@
 
       </div>
       <div class="col-md-12" id="timeline_container">
-            <canvas id="timeline" height="25px"></canvas>
+	  		<table>
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td><canvas id="picture1"></canvas></td>
+						<td><canvas id="picture2"></canvas></td>
+						<td><canvas id="picture3"></canvas></td>
+						<td><canvas id="picture4"></canvas></td>
+						<td><canvas id="picture5"></canvas></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td><canvas id="timeline" height="25px"></canvas></td>
+		</tr>
+		</table>
       </div>
     </div> <!-- /container -->
 

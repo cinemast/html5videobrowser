@@ -28,8 +28,33 @@ $(document).ready(function () {
     ctx_timeline = timeline[0].getContext("2d");
     ctx_timeline.canvas.width = container_timline.width();
     ctx_timeline.canvas.height = 200;
-	var vid_duration = Math.round(document.getElementById("videoplayer").duration);
-    drawTimeline(vid_duration, 20);
+	videoplayer = document.getElementById("videoplayer");
+	var vid_duration = Math.round(videoplayer.duration);
+    drawTimeline(vid_duration, 5);
+	videoplayer.addEventListener('play', function(){
+	  	canvasPicture1     = document.getElementById('picture1');
+		canvasPicture2     = document.getElementById('picture2');
+		canvasPicture3     = document.getElementById('picture3');
+		canvasPicture4     = document.getElementById('picture4');
+		canvasPicture5     = document.getElementById('picture5');
+
+		contextPicture1    = canvasPicture1.getContext('2d');
+		contextPicture2    = canvasPicture2.getContext('2d');
+		contextPicture3    = canvasPicture3.getContext('2d');
+		contextPicture4    = canvasPicture4.getContext('2d');
+		contextPicture5    = canvasPicture5.getContext('2d');
+
+		var w = timeline.width();
+		var h = videoplayer.videoHeight * timeline.width() / videoplayer.videoWidth; 
+
+		contextPicture1.drawImage(videoplayer,0,0,w,h);
+		contextPicture2.drawImage(videoplayer,0,0,w,h);
+		contextPicture3.drawImage(videoplayer,0,0,w,h);
+		contextPicture4.drawImage(videoplayer,0,0,w,h);
+		contextPicture5.drawImage(videoplayer,0,0,w,h);
+
+	},false);
+	
 });
 
 //length in seconds, interval in divions units
