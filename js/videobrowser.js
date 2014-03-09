@@ -235,19 +235,6 @@ function newTimeline() {
 	var offset = getNearestOffset(keyframes[0], segmentDuration);
 
 	
-	//render current time:
-	ctx_timeline.strokeStyle ='#FF0000';
-	ctx_timeline.beginPath();
-	ctx_timeline.lineWidth = 1;
-	x_offset = ctx_timeline.canvas.width/(segmentDuration*amountOfThumbs)*(videoplayer.currentTime-offset);
-
-	//x_offset = ctx_timeline.canvas.width/videoduration*Math.round(videoplayer.currentTime);
-	ctx_timeline.moveTo(Math.round(x_offset), timeline.height()-50);
-	ctx_timeline.lineTo(Math.round(x_offset), timeline.height()-10);
-	ctx_timeline.stroke();	
-	
-	
-	
 	//render current keyframes
 	for (i=0; i < amountOfThumbs; i++) {
 		ctx_timeline.strokeStyle ='#00FF00';
@@ -260,6 +247,19 @@ function newTimeline() {
 		ctx_timeline.moveTo(Math.round(x_offset), timeline.height()-50);
 		ctx_timeline.lineTo(Math.round(x_offset), timeline.height()-10);
 		ctx_timeline.stroke();	
+	}
+	
+	//render current time:
+	ctx_timeline.strokeStyle ='#FF0000';
+	ctx_timeline.beginPath();
+	ctx_timeline.lineWidth = 1;
+	x_offset = ctx_timeline.canvas.width/(segmentDuration*amountOfThumbs)*(videoplayer.currentTime-offset);
+	ctx_timeline.moveTo(Math.round(x_offset), timeline.height()-50);
+	ctx_timeline.lineTo(Math.round(x_offset), timeline.height()-10);
+	ctx_timeline.stroke();	
+	
+	if (x_offset >= ctx_timeline.canvas.width) {
+		drawThumbs();
 	}
 	
 }
