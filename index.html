@@ -7,30 +7,18 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="http://getbootstrap.com/docs-assets/ico/favicon.png">
-
     <title>HTML5 Video Browser</title>
-
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="css/navbar-static-top.css" rel="stylesheet">
     <link href="css/videobrowser.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy this line! -->
-    <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
   </head>
 
   <body>
 
     <!-- Static navbar -->
     <div class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -40,37 +28,13 @@
           </button>
           <a class="navbar-brand" href="#">HTML5 Video Browser</a>
         </div>
-        <div style="height: 1px;" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">Upload Video</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Browse Video <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Video #1</a></li>
-                <li><a href="#">Video #2</a></li>
-              </ul>
-            </li>
-          </ul>
-
-        </div><!--/.nav-collapse -->
-      </div>
     </div>
     <div class="container">
-
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-
-      </div>
-      <div class="col-md-4"></div>
-      <div class="col-md-4">
-          <video id="videoplayer" width="100%" controls preload="auto" poster="media/poster.jpg">
+      <div class="col-md-12">
+          <video id="videoplayer" width="600px" preload="auto" poster="media/poster.jpg">
                 <source src="media/BigBuckBunny_320x180.webm" type="video/webm">
            Your browser does not support the video tag.
         </video>
-      </div>
-      <div class="col-md-4">
-
       </div>
       <div class="col-md-12" id="timeline_container">
 		<table border="0" cellspacing="0" cellpadding="0">
@@ -78,17 +42,20 @@
 			<td>
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<td><canvas id="picture1"></canvas></td>
-						<td><canvas id="picture2"></canvas></td>
-						<td><canvas id="picture3"></canvas></td>
-						<td><canvas id="picture4"></canvas></td>
-						<td><canvas id="picture5"></canvas></td>
+						<td><canvas class="thumb" id="picture1"></canvas></td>
+						<td><canvas class="thumb" id="picture2"></canvas></td>
+						<td><canvas class="thumb" id="picture3"></canvas></td>
+						<td><canvas class="thumb" id="picture4"></canvas></td>
+						<td><canvas class="thumb" id="picture5"></canvas></td>
 					</tr>
 				</table>
 			</td>
 		</tr>
 		<tr>
 			<td><canvas id="timeline"></canvas></td>
+		</tr>
+		<tr>
+						<td><a class="btn btn-danger" id="button_reload">Restart</a> | <a class="btn btn-success" id="button_play">Play/Pause</a> | <a class="btn btn-primary" id="button_zoomout">Zoom-out</a> | Zoomlevel: <span id="zoomlevel">1</span> | Time: <span id="playbacktime">00:00:00</span></td>
 		</tr>
 		</table>
       </div>
@@ -103,4 +70,5 @@
     <script src="js/videobrowser.js"></script>
 
 
-</body></html>
+	</body>
+</html>

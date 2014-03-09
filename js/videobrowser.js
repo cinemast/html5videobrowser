@@ -6,7 +6,7 @@ videoduration = null;
 secondvideo = null;
 counti = 0;
 isVideoPlayPushed = false;
-seekingDeepness = 0;
+zoomlevel = 1;
 amountOfThumbs = 5;
 segmentDuration = 0;
 currentStart = 0;
@@ -18,6 +18,7 @@ contextPicture2    = null;
 contextPicture3    = null;
 contextPicture4    = null;
 contextPicture5    = null;
+timer = null;
 
 
 String.prototype.toHHMMSS = function () {
@@ -48,11 +49,11 @@ function initThings()
 	canvasPicture4     = document.getElementById('picture4');
 	canvasPicture5     = document.getElementById('picture5');
 	
-	canvasPicture1.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 1); seekingDeepness = seekingDeepness + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
-	canvasPicture2.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 2); seekingDeepness = seekingDeepness + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
-	canvasPicture3.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 3); seekingDeepness = seekingDeepness + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
-	canvasPicture4.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 4); seekingDeepness = seekingDeepness + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
-	canvasPicture5.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 5); seekingDeepness = seekingDeepness + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
+	canvasPicture1.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 1); zoomlevel = zoomlevel + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
+	canvasPicture2.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 2); zoomlevel = zoomlevel + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
+	canvasPicture3.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 3); zoomlevel = zoomlevel + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
+	canvasPicture4.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 4); zoomlevel = zoomlevel + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
+	canvasPicture5.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 5); zoomlevel = zoomlevel + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
 
 	canvasPicture1.width  = videowidth;
 	canvasPicture1.height = videoheight;
@@ -76,17 +77,18 @@ function initThings()
 function drawThumbs()
 {
 
+	$("#zoomlevel").text(zoomlevel);
 	segmentDuration = videoduration;
-	for (var i = 0; i < seekingDeepness; i++)
+	for (var i = 0; i < zoomlevel; i++)
 	{
 		segmentDuration = Math.round(segmentDuration / amountOfThumbs);
 	}
 	
-	alert(currentStart);
-	alert(segmentDuration);
+	//alert(currentStart);
+	//alert(segmentDuration);
 	
-	drawTimeline(currentStart, segmentDuration, amountOfThumbs);
-	
+	//drawTimeline(currentStart, segmentDuration, amountOfThumbs);
+	newTimeline();
 	var callback = function() 
 	{
 		if (counti == 0) {	contextPicture1.drawImage(secondvideo,0,0,videowidth,videoheight); }
@@ -128,17 +130,73 @@ $(document).ready(function () {
     ctx_timeline.canvas.width = container_timline.width();
     ctx_timeline.canvas.height = 50;
 	
-	videoplayer.addEventListener('play', function(){
-		if (isVideoPlayPushed == false)
-		{
+	$("#button_play").click(function() {
+		if(!isVideoPlayPushed) {
+			isVideoPlayPushed = true;
+			videoplayer.play();
 			initThings();
+			timer = setInterval(renderFunction, 1000);
+		} else {
+			isVideoPlayPushed = false;
+			videoplayer.pause();
+			clearInterval(timer);
 		}
-		isVideoPlayPushed = true;
-				
-
-	},false);
+	});
 	
+	$("#button_reload").click(function() {
+		window.location.reload()
+	});
+	
+	$("#button_zoomout").click(function() {
+		if(zoomlevel > 1) {
+			zoomlevel = zoomlevel -1;
+			drawThumbs();
+		}
+	});
+	
+	//newTimeline();
 });
+
+function renderFunction() {
+	$("#playbacktime").text((""+videoplayer.currentTime).toHHMMSS());
+	newTimeline();
+	return true;
+}
+
+
+function newTimeline() {
+	ctx_timeline.clearRect(0, 0, ctx_timeline.canvas.width, ctx_timeline.canvas.height);
+	ctx_timeline.stroke();
+		
+	var increment = (timeline.width() / amountOfThumbs);
+	for (i=0; i < amountOfThumbs; i++) {
+		ctx_timeline.beginPath();
+        ctx_timeline.moveTo(i*increment+2,timeline.height()-50);
+        ctx_timeline.lineTo(i*increment+2,timeline.height()-10);
+
+        ctx_timeline.lineWidth = 1;
+
+      // set line color
+        ctx_timeline.strokeStyle = '#00086E';
+
+        ctx_timeline.stroke();
+        
+        ctx_timeline.font="10px Arial";
+		ctx_timeline.textAlign = 'center';
+		var timestring = "" + (videoduration/amountOfThumbs/zoomlevel*i);
+		ctx_timeline.fillText(timestring.toHHMMSS(),i*increment,timeline.height());
+    
+	}
+	
+	//render current time:
+	ctx_timeline.strokeStyle ='#FF0000';
+	ctx_timeline.beginPath();
+	ctx_timeline.lineWidth = 1;
+	x_offset = ctx_timeline.canvas.width/videoduration*Math.round(videoplayer.currentTime)*zoomlevel;
+	ctx_timeline.moveTo(Math.round(x_offset), timeline.height()-50);
+	ctx_timeline.lineTo(Math.round(x_offset), timeline.height()-10);
+	ctx_timeline.stroke();	
+}
 
 //length in seconds, interval in divions units
 function drawTimeline(start, length, interval) {
