@@ -35,6 +35,14 @@ String.prototype.toHHMMSS = function () {
     return time;
 }
 
+function getMousePos(canvas, evt) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+          x: evt.clientX - rect.left,
+          y: evt.clientY - rect.top
+        };
+}
+
 function getNearestOffset(offset, duration) {
 	var i=0;
 	while (i*duration <= offset) {
@@ -84,6 +92,19 @@ function initThings()
 	contextPicture3    = canvasPicture3.getContext('2d');
 	contextPicture4    = canvasPicture4.getContext('2d');
 	contextPicture5    = canvasPicture5.getContext('2d');
+	
+	//timeline click handler
+	document.getElementById('timeline').onclick = function(event) { 
+		var x = getMousePos(document.getElementById('timeline'), event).x;
+		
+		var segmentDuration = videoduration / amountOfThumbs / zoomlevel;
+		var offset = getNearestOffset(keyframes[0], segmentDuration);
+		videoplayer.currentTime = x / ctx_timeline.canvas.width*(segmentDuration*amountOfThumbs) + offset;
+		
+		//x_offset = ctx_timeline.canvas.width/(segmentDuration*amountOfThumbs)*(videoplayer.currentTime-offset);
+
+	}
+	
 	drawThumbs();
 }
 
@@ -91,9 +112,7 @@ function drawThumbs()
 {
 	segmentDuration = videoduration / amountOfThumbs / zoomlevel;
 	var offset = videoplayer.currentTime;
-	
-	//alert("offset: " + offset + " Segment duration: " + segmentDuration + " Nearest offset: " + getNearestOffset(offset, segmentDuration));
-	
+		
 	if (offset < 2) {
 		keyframes[0] = Math.round((Math.random() * 1000 % segmentDuration));
 	} else {
