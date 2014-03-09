@@ -208,21 +208,19 @@ function newTimeline() {
 		
 	var increment = (timeline.width() / amountOfThumbs);
 	for (i=0; i < amountOfThumbs; i++) {
+		//Draw seperator lines (blue)
 		ctx_timeline.beginPath();
         ctx_timeline.moveTo(i*increment+2,timeline.height()-50);
         ctx_timeline.lineTo(i*increment+2,timeline.height()-10);
 
         ctx_timeline.lineWidth = 1;
-
-      // set line color
         ctx_timeline.strokeStyle = '#00086E';
-
         ctx_timeline.stroke();
         
+        //draw time stamps
         ctx_timeline.font="10px Arial";
 		ctx_timeline.textAlign = 'center';
 		var timestring = "" + (getNearestOffset(keyframes[0],videoduration/amountOfThumbs/zoomlevel) + videoduration/amountOfThumbs/zoomlevel*i);
-		
 		if (i==0) {
 			ctx_timeline.fillText(timestring.toHHMMSS(),i*increment+25,timeline.height());
 		} else {
@@ -235,7 +233,7 @@ function newTimeline() {
 	var offset = getNearestOffset(keyframes[0], segmentDuration);
 
 	
-	//render current keyframes
+	//render current keyframes (green)
 	for (i=0; i < amountOfThumbs; i++) {
 		ctx_timeline.strokeStyle ='#00FF00';
 		ctx_timeline.beginPath();
@@ -249,7 +247,7 @@ function newTimeline() {
 		ctx_timeline.stroke();	
 	}
 	
-	//render current time:
+	//render current time (red)
 	ctx_timeline.strokeStyle ='#FF0000';
 	ctx_timeline.beginPath();
 	ctx_timeline.lineWidth = 1;
