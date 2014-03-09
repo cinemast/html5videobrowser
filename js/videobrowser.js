@@ -19,6 +19,7 @@ contextPicture3    = null;
 contextPicture4    = null;
 contextPicture5    = null;
 timer = null;
+keyframes 		= [0,0,0,0,0];
 
 
 String.prototype.toHHMMSS = function () {
@@ -32,6 +33,16 @@ String.prototype.toHHMMSS = function () {
     if (seconds < 10) {seconds = "0"+seconds;}
     var time    = hours+':'+minutes+':'+seconds;
     return time;
+}
+
+function getNearestOffset(offset, duration) {
+	var i=0;
+	while (i*duration < offset) {
+		i++;
+	}
+	if (i < 1)
+		return 0;
+	return (i-1)*duration;
 }
 
 function initThings()
@@ -49,11 +60,13 @@ function initThings()
 	canvasPicture4     = document.getElementById('picture4');
 	canvasPicture5     = document.getElementById('picture5');
 	
-	canvasPicture1.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 1); zoomlevel = zoomlevel + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
-	canvasPicture2.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 2); zoomlevel = zoomlevel + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
-	canvasPicture3.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 3); zoomlevel = zoomlevel + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
-	canvasPicture4.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 4); zoomlevel = zoomlevel + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
-	canvasPicture5.onclick = function(){ currentStart = currentStart + Math.round(segmentDuration / amountOfThumbs * 5); zoomlevel = zoomlevel + 1; drawThumbs(); videoplayer.currentTime = currentStart; }
+	
+	
+	canvasPicture1.onclick = function(){ zoomlevel = zoomlevel * 2; videoplayer.currentTime = keyframes[0]; drawThumbs();}
+	canvasPicture2.onclick = function(){ zoomlevel = zoomlevel * 2; videoplayer.currentTime = keyframes[1]; drawThumbs();}
+	canvasPicture3.onclick = function(){ zoomlevel = zoomlevel * 2; videoplayer.currentTime = keyframes[2]; drawThumbs();}
+	canvasPicture4.onclick = function(){ zoomlevel = zoomlevel * 2; videoplayer.currentTime = keyframes[3]; drawThumbs();}
+	canvasPicture5.onclick = function(){ zoomlevel = zoomlevel * 2; videoplayer.currentTime = keyframes[4]; drawThumbs();}
 
 	canvasPicture1.width  = videowidth;
 	canvasPicture1.height = videoheight;
@@ -76,19 +89,23 @@ function initThings()
 
 function drawThumbs()
 {
+	segmentDuration = videoduration / amountOfThumbs / zoomlevel;
+	var offset = videoplayer.currentTime;
+	
+	if (offset < 2) {
+		keyframes[0] = Math.round((Math.random() * 1000 % segmentDuration));
+	} else {
+		keyframes[0] = offset;
+	}
+	for (i=1; i <= amountOfThumbs; i++) {
+		keyframes[i] = Math.round(getNearestOffset(offset, segmentDuration) + segmentDuration * i + Math.round((Math.random() * 1000 % segmentDuration)));
+	}
+
+	
+		
 
 	$("#zoomlevel").text(zoomlevel);
-	segmentDuration = videoduration;
-	for (var i = 0; i < zoomlevel; i++)
-	{
-		segmentDuration = Math.round(segmentDuration / amountOfThumbs);
-	}
-	
-	//alert(currentStart);
-	//alert(segmentDuration);
-	
-	//drawTimeline(currentStart, segmentDuration, amountOfThumbs);
-	newTimeline();
+
 	var callback = function() 
 	{
 		if (counti == 0) {	contextPicture1.drawImage(secondvideo,0,0,videowidth,videoheight); }
@@ -97,18 +114,18 @@ function drawThumbs()
 		if (counti == 3) {	contextPicture4.drawImage(secondvideo,0,0,videowidth,videoheight); }
 		if (counti == 4) {	contextPicture5.drawImage(secondvideo,0,0,videowidth,videoheight); }
 		
-		if (counti == 4)
-		{
+		if (counti == 4) {
 			$(secondvideo).unbind('seeked');   
-		} else 
-		{
+		} else {
 			counti = counti + 1;
-			secondvideo.currentTime = Math.round(secondvideo.currentTime + (segmentDuration / amountOfThumbs));
+			secondvideo.currentTime = Math.round(keyframes[counti]);
+			//secondvideo.currentTime = Math.round(secondvideo.currentTime + (segmentDuration / amountOfThumbs));
+			
 		}
 	}
 	
 	counti = 0;
-	secondvideo.currentTime = Math.round(currentStart + (segmentDuration / amountOfThumbs));
+	secondvideo.currentTime = keyframes[0];//Math.round(currentStart + (segmentDuration / amountOfThumbs));
 	$(secondvideo).bind('seeked', callback);   
 }
 
@@ -149,7 +166,7 @@ $(document).ready(function () {
 	
 	$("#button_zoomout").click(function() {
 		if(zoomlevel > 1) {
-			zoomlevel = zoomlevel -1;
+			zoomlevel = zoomlevel /2;
 			drawThumbs();
 		}
 	});
@@ -196,32 +213,18 @@ function newTimeline() {
 	ctx_timeline.moveTo(Math.round(x_offset), timeline.height()-50);
 	ctx_timeline.lineTo(Math.round(x_offset), timeline.height()-10);
 	ctx_timeline.stroke();	
-}
-
-//length in seconds, interval in divions units
-function drawTimeline(start, length, interval) {
-	ctx_timeline.clearRect(0, 0, ctx_timeline.canvas.width, ctx_timeline.canvas.height);
-	interval = interval + 1;
-    var increment = (timeline.width() / interval);
-
-    for (i=1;i<interval; i++){
-       //ctx_timeline.lineWidth = 1;
-       //alert(i + "/" + timeline.height());
-       ctx_timeline.beginPath();
-       ctx_timeline.moveTo(i*increment,timeline.height()-50);
-       ctx_timeline.lineTo(i*increment,timeline.height()-10);
-
-       ctx_timeline.lineWidth = 1;
-
-      // set line color
-       ctx_timeline.strokeStyle = '#00086E';
-
-       ctx_timeline.stroke();
-
-       ctx_timeline.font="10px Arial";
-       ctx_timeline.textAlign = 'center';
-       var timestring = "" + (length/interval*i + start);
-       ctx_timeline.fillText(timestring.toHHMMSS(),i*increment,timeline.height());
-    }
-
+	
+	
+	//render current keyframes
+	for (i=0; i < amountOfThumbs; i++) {
+		ctx_timeline.strokeStyle ='#00FF00';
+		ctx_timeline.beginPath();
+		ctx_timeline.lineWidth = 1;
+		x_offset = ctx_timeline.canvas.width/videoduration*keyframes[i]*zoomlevel;
+		ctx_timeline.moveTo(Math.round(x_offset), timeline.height()-50);
+		ctx_timeline.lineTo(Math.round(x_offset), timeline.height()-10);
+		ctx_timeline.stroke();	
+	}
+	
+	//alert(keyframes);
 }
