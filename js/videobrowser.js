@@ -37,7 +37,7 @@ String.prototype.toHHMMSS = function () {
 
 function getNearestOffset(offset, duration) {
 	var i=0;
-	while (i*duration < offset) {
+	while (i*duration <= offset) {
 		i++;
 	}
 	if (i < 1)
@@ -92,12 +92,14 @@ function drawThumbs()
 	segmentDuration = videoduration / amountOfThumbs / zoomlevel;
 	var offset = videoplayer.currentTime;
 	
+	//alert("offset: " + offset + " Segment duration: " + segmentDuration + " Nearest offset: " + getNearestOffset(offset, segmentDuration));
+	
 	if (offset < 2) {
 		keyframes[0] = Math.round((Math.random() * 1000 % segmentDuration));
 	} else {
 		keyframes[0] = offset;
 	}
-	for (i=1; i <= amountOfThumbs; i++) {
+	for (i=1; i <= amountOfThumbs-1; i++) {
 		keyframes[i] = Math.round(getNearestOffset(offset, segmentDuration) + segmentDuration * i + Math.round((Math.random() * 1000 % segmentDuration)));
 	}
 
@@ -200,19 +202,31 @@ function newTimeline() {
         
         ctx_timeline.font="10px Arial";
 		ctx_timeline.textAlign = 'center';
-		var timestring = "" + (videoduration/amountOfThumbs/zoomlevel*i);
-		ctx_timeline.fillText(timestring.toHHMMSS(),i*increment,timeline.height());
+		var timestring = "" + (getNearestOffset(keyframes[0],videoduration/amountOfThumbs/zoomlevel) + videoduration/amountOfThumbs/zoomlevel*i);
+		
+		if (i==0) {
+			ctx_timeline.fillText(timestring.toHHMMSS(),i*increment+25,timeline.height());
+		} else {
+			ctx_timeline.fillText(timestring.toHHMMSS(),i*increment,timeline.height());
+		}
     
 	}
+	
+	var segmentDuration = videoduration / amountOfThumbs / zoomlevel;
+	var offset = getNearestOffset(keyframes[0], segmentDuration);
+
 	
 	//render current time:
 	ctx_timeline.strokeStyle ='#FF0000';
 	ctx_timeline.beginPath();
 	ctx_timeline.lineWidth = 1;
-	x_offset = ctx_timeline.canvas.width/videoduration*Math.round(videoplayer.currentTime)*zoomlevel;
+	x_offset = ctx_timeline.canvas.width/(segmentDuration*amountOfThumbs)*(videoplayer.currentTime-offset);
+
+	//x_offset = ctx_timeline.canvas.width/videoduration*Math.round(videoplayer.currentTime);
 	ctx_timeline.moveTo(Math.round(x_offset), timeline.height()-50);
 	ctx_timeline.lineTo(Math.round(x_offset), timeline.height()-10);
 	ctx_timeline.stroke();	
+	
 	
 	
 	//render current keyframes
@@ -220,11 +234,13 @@ function newTimeline() {
 		ctx_timeline.strokeStyle ='#00FF00';
 		ctx_timeline.beginPath();
 		ctx_timeline.lineWidth = 1;
-		x_offset = ctx_timeline.canvas.width/videoduration*keyframes[i]*zoomlevel;
+		//x_offset = ctx_timeline.canvas.width/videoduration*keyframes[i];
+		
+		x_offset = ctx_timeline.canvas.width/(segmentDuration*amountOfThumbs)*(keyframes[i]-offset);
+		
 		ctx_timeline.moveTo(Math.round(x_offset), timeline.height()-50);
 		ctx_timeline.lineTo(Math.round(x_offset), timeline.height()-10);
 		ctx_timeline.stroke();	
 	}
 	
-	//alert(keyframes);
 }
