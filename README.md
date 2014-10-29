@@ -11,3 +11,8 @@ git clone https://github.com/cinemast/html5videobrowser.git
 cd html5videobrowser
 chromium --allow-file-access-from-files index.html
 ```
+
+Screenshot
+=============
+
+![Screenshot](https://raw.githubusercontent.com/cinemast/html5videobrowser/master/doc/screenshot.png)
